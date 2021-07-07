@@ -36,8 +36,8 @@ exports.preSignup =  (req, res) =>{
     `
         }
         
-        await sgMail.send(emailData)
-  res.status(200).json({message: `Thanks for reaching out. I will get back to you at ${email}`})
+       const result =  await sgMail.send(emailData)
+  if(result){res.status(200).json({message: `Thanks for reaching out. I will get back to you at ${email}`})}
 
     //     let transporter = nodemailer.createTransport({
     //         host: 'smtp.gmail.com',
