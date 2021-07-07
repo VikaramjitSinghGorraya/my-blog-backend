@@ -1,7 +1,6 @@
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
 const nodemailer = require("nodemailer")
-const smtpTransport = require('nodemailer-smtp-transport')
 const secret = process.env.JSON_SECRET
 const mail =  process.env.NODEMAIL_MAIL
 const password = process.env.NODEMAIL_PASSWORD
