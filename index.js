@@ -13,14 +13,8 @@ app.use(cookieParser())
 app.use(expressValidator())
 app.use(cors({origin: 'https://jovial-payne-9512ac.netlify.app', credentials: true }))
 
-app.use(function (req, res, next) {
-        res.setHeader('Access-Control-Allow-Origin', 'https://jovial-payne-9512ac.netlify.app');
-        res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
-        res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-        res.setHeader('Access-Control-Allow-Credentials', true);
-        next();
-    })
-app.set('trust proxy', 1)
+
+
 const authRoutes = require('./routes/auth')
 const userRoutes = require('./routes/user')
 const categoryROutes = require('./routes/category')
