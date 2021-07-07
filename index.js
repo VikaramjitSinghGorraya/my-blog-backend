@@ -20,7 +20,7 @@ app.use(function (req, res, next) {
         res.setHeader('Access-Control-Allow-Credentials', true);
         next();
     })
-
+app.set('trust proxy', 1)
 const authRoutes = require('./routes/auth')
 const userRoutes = require('./routes/user')
 const categoryROutes = require('./routes/category')
