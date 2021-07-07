@@ -4,13 +4,8 @@
     "routes":[
         {
           "src": "/(.*)",
-          "dest": "/",
-          "headers": {
-            "Access-Control-Allow-Origin": "https://jovial-payne-9512ac.netlify.app",
-            "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
-            "Access-Control-Allow-Credentials": true
-          },
-          "continue": true
+          "dest": "/"
+          
         }
     ]
 }
