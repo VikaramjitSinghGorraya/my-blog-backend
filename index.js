@@ -11,7 +11,7 @@ const app = express()
 app.use(express.json())
 app.use(cookieParser())
 app.use(expressValidator())
-app.use(cors({origin: 'http://localhost:3000'}))
+app.use(cors({origin: 'https://jovial-payne-9512ac.netlify.app/'}))
 
 app.use(function (req, res, next) {
         res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
