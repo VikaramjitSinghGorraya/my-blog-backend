@@ -1,4 +1,6 @@
-const nodemailer = require("nodemailer");
+const nodemailer = require("nodemailer")
+const sgMail = require('@sendgrid/mail')
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 const formidable = require('formidable')
 const fs = require('fs')
 const user = require('../models/user');
@@ -104,7 +106,7 @@ exports.updateProfile = (req,res)=>{
     })
 }
 
-exports.contactEmail = (req, res) =>{
+exports.contactEmail = async (req, res) =>{
    
     const {email,message} = req.body
     if(message.length <=200){
@@ -112,34 +114,56 @@ exports.contactEmail = (req, res) =>{
             error: 'The message should have at least 200 characters.'
         })
     }
-    let transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 587,
-        secure:false,
-        auth: {
-            user: process.env.NODEMAIL_MAIL,
-            pass: process.env.NODEMAIL_PASSWORD        
-        }})
-    
-    
-      const mailOptions = {
-        from: `${email}`,
-        to: process.env.NODEMAIL_MAIL,
-        subject: `Customer contact: ${email}`,
-        text: `${message}`,
-      }
 
-    transporter.sendMail(mailOptions,(error, info) =>{
-        if(error){
-            return res.status(400).json({
-                error: 'Could not send mail. Please try again, later.'
-            })
+        const emailData = {
+            to: `${email}`,
+            from: 'blogaramaa@gmail.com',
+            subject: `VERIFICATION EMAIL`,
+            html: `<p>Hello <b>${fullName}</b></p>
+            <p>Here is your account activation link.</p>
+            <p>See you soon !!! </p>
+
+            <p>Copy the following link in the browser.</p>
+            https://jovial-payne-9512ac.netlify.app/EmailVerification/${token}
+    `
         }
-        return res.status(200).json({
-            message: `Email Sent. We will contact you back at ${email}`
-        })
-    });
-}
+        
+       const result =  await sgMail.send(emailData)
+        if(result){
+            return res.status(200).json({message: `Thanks for reaching out. I will get back to you at ${email}`})
+    }
+        return res.status(400).json({error:'Could not send email. Please, try again later.'})
+    }
+
+    // }
+    // let transporter = nodemailer.createTransport({
+    //     host: 'smtp.gmail.com',
+    //     port: 587,
+    //     secure:false,
+    //     auth: {
+    //         user: process.env.NODEMAIL_MAIL,
+    //         pass: process.env.NODEMAIL_PASSWORD        
+    //     }})
+    
+    
+    //   const mailOptions = {
+    //     from: `${email}`,
+    //     to: process.env.NODEMAIL_MAIL,
+    //     subject: `Customer contact: ${email}`,
+    //     text: `${message}`,
+    //   }
+
+    // transporter.sendMail(mailOptions,(error, info) =>{
+    //     if(error){
+    //         return res.status(400).json({
+    //             error: 'Could not send mail. Please try again, later.'
+    //         })
+    //     }
+    //     return res.status(200).json({
+    //         message: `Email Sent. We will contact you back at ${email}`
+    //     })
+    // });
+
 
 exports.getPhoto = (req,res)=>{
     
