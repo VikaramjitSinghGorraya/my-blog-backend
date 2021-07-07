@@ -1,6 +1,8 @@
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
 const nodemailer = require("nodemailer")
+const sgMail = require('@sendgrid/mail')
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 const secret = process.env.JSON_SECRET
 const mail =  process.env.NODEMAIL_MAIL
 const password = process.env.NODEMAIL_PASSWORD
