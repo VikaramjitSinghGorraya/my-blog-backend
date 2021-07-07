@@ -23,6 +23,7 @@ exports.preSignup = (req, res) =>{
 
         const token = jwt.sign({fullName, email, password}, process.env.JSON_VERIFICATION_SECRET, {expiresIn: '15min'})
 
+        return new Promise((resolve,reject)=>{
         let transporter = nodemailer.createTransport({
             host: 'smtp.gmail.com',
             port: 587,
@@ -51,16 +52,20 @@ exports.preSignup = (req, res) =>{
     
         transporter.sendMail(mailOptions,(error, info) =>{
             if(error){
+                resolve(false)
                 return res.status(400).json({
                     error: 'Could not send mail. Please, try again later.'
                 })
             }
+            resolve(true)
             return res.status(200).json({
                 message: `Verification email sent to ${email}.
                 Please, note that the link will be valid only for next 10 minutes.`
             })
         })
     })
+
+})
 }
 
 
