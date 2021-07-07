@@ -136,10 +136,9 @@ exports.signin = (req,res) =>{
         const id = user._id
         const token = jwt.sign({id}, secret, {expiresIn: '1d'})
         res.cookie('token', token, {
-            expiresIn  : 5184000000,
-            httpOnly:true,
-            secure: true,
-            sameSite: 'none'
+            expires  : new Date(Date.now() + 10 * 365 * 24 * 60 * 60),
+            httpOnly : true,
+            secure: true
           })
         const {_id, email, name, about, createdAt} = user
         res.status(200).send({
