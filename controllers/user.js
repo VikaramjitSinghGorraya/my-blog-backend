@@ -109,6 +109,8 @@ exports.updateProfile = (req,res)=>{
 exports.contactEmail = async (req, res) =>{
    
     const {email,message} = req.body
+    return res.status(200).json({message: `Thanks for reaching out. I will get back to you at ${email}`})
+
     if(message.length <=200){
         return res.status(400).json({
             error: 'The message should have at least 200 characters.'
