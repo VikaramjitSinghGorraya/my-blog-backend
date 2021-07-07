@@ -23,6 +23,7 @@
     "mongoose": "^5.12.2",
     "mongoose-slug-generator": "^1.0.4",
     "nodemailer": "^6.6.0",
-    "nodemailer-smtp-transport": "^2.7.4"
+    "nodemailer-smtp-transport": "^2.7.4",
+    "vercel": "^23.0.1"
   }
 }
