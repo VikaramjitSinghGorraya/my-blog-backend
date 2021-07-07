@@ -34,12 +34,17 @@ exports.preSignup =  (req, res) =>{
             <p>See you soon !!! </p>
 
             <p>Copy the following link in the browser.</p>
-            http://localhost:3000/EmailVerification/${token}
+            https://jovial-payne-9512ac.netlify.app/EmailVerification/${token}
     `
         }
         
        const result =  await sgMail.send(emailData)
-  if(result){res.status(200).json({message: `Thanks for reaching out. I will get back to you at ${email}`})}
+        if(result){
+            return res.status(200).json({message: `Thanks for reaching out. I will get back to you at ${email}`
+        })}
+        return res.status(400).json({error:'Could not send email. Please, try again later.'})
+    })
+}
 
     //     let transporter = nodemailer.createTransport({
     //         host: 'smtp.gmail.com',
@@ -79,8 +84,7 @@ exports.preSignup =  (req, res) =>{
     //         })
     //     })
     // })
-})
-}
+
 
 
 exports.signup = (req, res) =>{
@@ -148,52 +152,70 @@ exports.passwordLink = (req,res)=>{
     var token = ''
     var passwordResetLink = ''
     const {email, userId} = req.body
-    User.findOne({email: email}, (err, user)=>{
+    User.findOne({email: email}, async (err, user)=>{
         if(err || !user){
             return res.status(400).json({
                 error: 'Could not find user.'
             })
         }
 
-        let transporter = nodemailer.createTransport({
-            host: 'smtp.gmail.com',
-            port: 587,
-            secure:false,
-            auth: {
-                user: process.env.NODEMAIL_MAIL,
-                pass: process.env.NODEMAIL_PASSWORD        
-            }})
-
-            if(!userId){
-                 token = jwt.sign({_id: user._id}, process.env.JSON_FORGOT_PASSWORD_SECRET,{expiresIn: '10m'})
-            }
-
-          const mailOptions = {
-            from: 'blogaramaa@gmail.com',
+        const emailData = {
             to: `${email}`,
+            from: 'blogaramaa@gmail.com',
             subject: `PASSWORD RESET LINK`,
             html: `<p>Hello <span style={{color:'#1877f2', fontWeight:'bold'}}>${user.name}</span></p>
                     <p>Here is your password reset link.</p>
-
                     <p>Copy the following link in the browser.</p>
-                   ${userId ? `https://localhost:3000/resetPassword/${userId}` : `https://localhost:3000/ForgotPassword/${token}`}
-            `,
-          }
-    
-        transporter.sendMail(mailOptions,(error, info) =>{
-            if(error){
-                console.log(error)
-                return res.status(400).json({
-                    error: 'Could not send mail. Please try again, later.'
-                })
-            }
-            return res.status(200).json({
-                message: `Password reset link sent to ${email}.
-               Please, note that the link will be valid only for next 10 minutes.`
-            })
-        })
+                    ${userId ? `https://jovial-payne-9512ac.netlify.app/resetPassword/${userId}` : `https://jovial-payne-9512ac.netlify.app/ForgotPassword/${token}`}
+        `}
+        
+       const result =  await sgMail.send(emailData)
+        if(result){
+            return res.status(200).json({message: `Thanks for reaching out. I will get back to you at ${email}`
+        })}
+        return res.status(400).json({error:'Could not send email. Please, try again later.'})
     })
 }
+
+    //     let transporter = nodemailer.createTransport({
+    //         host: 'smtp.gmail.com',
+    //         port: 587,
+    //         secure:false,
+    //         auth: {
+    //             user: process.env.NODEMAIL_MAIL,
+    //             pass: process.env.NODEMAIL_PASSWORD        
+    //         }})
+
+    //         if(!userId){
+    //              token = jwt.sign({_id: user._id}, process.env.JSON_FORGOT_PASSWORD_SECRET,{expiresIn: '10m'})
+    //         }
+
+    //       const mailOptions = {
+    //         from: 'blogaramaa@gmail.com',
+    //         to: `${email}`,
+    //         subject: `PASSWORD RESET LINK`,
+    //         html: `<p>Hello <span style={{color:'#1877f2', fontWeight:'bold'}}>${user.name}</span></p>
+    //                 <p>Here is your password reset link.</p>
+
+    //                 <p>Copy the following link in the browser.</p>
+    //                ${userId ? `https://localhost:3000/resetPassword/${userId}` : `https://localhost:3000/ForgotPassword/${token}`}
+    //         `,
+    //       }
+    
+    //     transporter.sendMail(mailOptions,(error, info) =>{
+    //         if(error){
+    //             console.log(error)
+    //             return res.status(400).json({
+    //                 error: 'Could not send mail. Please try again, later.'
+    //             })
+    //         }
+    //         return res.status(200).json({
+    //             message: `Password reset link sent to ${email}.
+    //            Please, note that the link will be valid only for next 10 minutes.`
+    //         })
+    //     })
+    // })
+
 exports.signout = (req, res) =>{
     res.clearCookie('token')
     res.status(200).json({
