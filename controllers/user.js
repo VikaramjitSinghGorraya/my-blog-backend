@@ -116,16 +116,10 @@ exports.contactEmail = async (req, res) =>{
     }
 
         const emailData = {
-            to: `${email}`,
-            from: 'blogaramaa@gmail.com',
-            subject: `VERIFICATION EMAIL`,
-            html: `<p>Hello <b>${fullName}</b></p>
-            <p>Here is your account activation link.</p>
-            <p>See you soon !!! </p>
-
-            <p>Copy the following link in the browser.</p>
-            https://jovial-payne-9512ac.netlify.app/EmailVerification/${token}
-    `
+            to: `blogaramaa@gmail.com`,
+            from: `${email}`,
+            subject: `Customer contact: ${email}`,
+            html: `${message}`
         }
         
        const result =  await sgMail.send(emailData)
