@@ -40,7 +40,8 @@ exports.preSignup =  (req, res) =>{
         
        const result =  await sgMail.send(emailData)
         if(result){
-            return res.status(200).json({message: `Thanks for reaching out. I will get back to you at ${email}`
+            return res.status(200).json({message: `Verification email sent to ${email}.
+                        Please, note that the link will be valid only for next 10 minutes.`
         })}
         return res.status(400).json({error:'Could not send email. Please, try again later.'})
     })
@@ -170,7 +171,8 @@ exports.passwordLink = (req,res)=>{
         
        const result =  await sgMail.send(emailData)
         if(result){
-            return res.status(200).json({message: `Thanks for reaching out. I will get back to you at ${email}`
+            return res.status(200).json({message:  `Password reset link sent to ${email}.
+                        Please, note that the link will be valid only for next 10 minutes.`
         })}
         return res.status(400).json({error:'Could not send email. Please, try again later.'})
     })
