@@ -117,7 +117,7 @@ exports.contactEmail = async (req, res) =>{
 
         const emailData = {
             to: `blogaramaa@gmail.com`,
-            from: `${email}`,
+            from: process.env.SENDMAIL_TO_BLOGRAMAA,
             subject: `Customer contact: ${email}`,
             html: `${message}`
         }
