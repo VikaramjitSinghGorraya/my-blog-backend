@@ -13,10 +13,10 @@ app.use(cookieParser())
 app.use(expressValidator())
 app.use(cors({origin: 'https://jovial-payne-9512ac.netlify.app', credentials: true }))
 
-// app.use(function (req, res, next) {
-//         res.setHeader('Access-Control-Allow-Origin', 'https://jovial-payne-9512ac.netlify.app');
-//         next();
-//     })
+app.use(function (req, res, next) {
+        res.setHeader('Access-Control-Allow-Origin', 'https://jovial-payne-9512ac.netlify.app');
+        next();
+    })
 
 const authRoutes = require('./routes/auth')
 const userRoutes = require('./routes/user')
