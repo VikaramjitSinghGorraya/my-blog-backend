@@ -7,9 +7,9 @@ const password = process.env.NODEMAIL_PASSWORD
 const expressjwt = require('express-jwt')
 
 
-exports.preSignup = (req, res) =>{
+exports.preSignup =  (req, res) =>{
     const {fullName, email, password, confirmPassword} = req.body
-    User.findOne({email: email},(err, userExists) =>{
+    User.findOne({email: email},async (err, userExists) =>{
         if(userExists){
             return res.status(400).json({
                 error: 'User with this email already exists.'
@@ -23,45 +23,61 @@ exports.preSignup = (req, res) =>{
 
         const token = jwt.sign({fullName, email, password}, process.env.JSON_VERIFICATION_SECRET, {expiresIn: '15min'})
 
-        
-        let transporter = nodemailer.createTransport({
-            host: 'smtp.gmail.com',
-            port: 465,
-            secure: true,
-            auth: {
-                user: process.env.NODEMAIL_MAIL,
-                pass: process.env.NODEMAIL_PASSWORD        
-            },
-            tls:{
-                rejectUnauthorized:false
-              }
-        })
-        
-          const mailOptions = {
-            from: 'blogaramaa@gmail.com',
+        const emailData = {
             to: `${email}`,
+            from: 'blogaramaa@gmail.com',
             subject: `VERIFICATION EMAIL`,
             html: `<p>Hello <b>${fullName}</b></p>
-                    <p>Here is your account activation link.</p>
-                    <p>See you soon !!! </p>
+            <p>Here is your account activation link.</p>
+            <p>See you soon !!! </p>
 
-                    <p>Copy the following link in the browser.</p>
-                    http://localhost:3000/EmailVerification/${token}
-            `,
-          }
+            <p>Copy the following link in the browser.</p>
+            http://localhost:3000/EmailVerification/${token}
+    `
+        }
+        
+        await sgMail.send(emailData)
+  res.status(200).json({message: `Thanks for reaching out. I will get back to you at ${email}`})
+
+    //     let transporter = nodemailer.createTransport({
+    //         host: 'smtp.gmail.com',
+    //         port: 465,
+    //         secure: true,
+    //         auth: {
+    //             user: process.env.NODEMAIL_MAIL,
+    //             pass: process.env.NODEMAIL_PASSWORD        
+    //         },
+    //         tls:{
+    //             rejectUnauthorized:false
+    //           }
+    //     })
+        
+    //       const mailOptions = {
+    //         from: 'blogaramaa@gmail.com',
+    //         to: `${email}`,
+    //         subject: `VERIFICATION EMAIL`,
+    //         html: `<p>Hello <b>${fullName}</b></p>
+    //                 <p>Here is your account activation link.</p>
+    //                 <p>See you soon !!! </p>
+
+    //                 <p>Copy the following link in the browser.</p>
+    //                 http://localhost:3000/EmailVerification/${token}
+    //         `,
+    //       }
     
-        transporter.sendMail(mailOptions,(error, info) =>{
-            if(error){
-                return res.status(400).json({
-                    error: 'Could not send mail. Please, try again later.'
-                })
-            }
-            return res.status(200).json({
-                message: `Verification email sent to ${email}.
-                Please, note that the link will be valid only for next 10 minutes.`
-            })
-        })
-    })
+    //     transporter.sendMail(mailOptions,(error, info) =>{
+    //         if(error){
+    //             return res.status(400).json({
+    //                 error: 'Could not send mail. Please, try again later.'
+    //             })
+    //         }
+    //         return res.status(200).json({
+    //             message: `Verification email sent to ${email}.
+    //             Please, note that the link will be valid only for next 10 minutes.`
+    //         })
+    //     })
+    // })
+})
 }
 
 
