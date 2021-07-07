@@ -137,6 +137,7 @@ exports.signin = (req,res) =>{
         const token = jwt.sign({id}, secret, {expiresIn: '1d'})
         res.cookie('token', token, {
             maxAge  : 5184000000,
+            httpOnly:true,
             secure: true
           })
         const {_id, email, name, about, createdAt} = user
