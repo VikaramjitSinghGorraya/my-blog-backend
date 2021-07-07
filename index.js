@@ -11,7 +11,7 @@ const app = express()
 app.use(express.json())
 app.use(cookieParser())
 app.use(expressValidator())
-app.use(cors())
+app.use(cors({origin: 'http://localhost:3000'}))
 
 const authRoutes = require('./routes/auth')
 const userRoutes = require('./routes/user')
