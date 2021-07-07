@@ -139,7 +139,7 @@ exports.signin = (req,res) =>{
             expiresIn  : 5184000000,
             httpOnly:true,
             secure: true,
-            sameSite: 'lax'
+            path: 'https://jovial-payne-9512ac.netlify.app'
           })
         const {_id, email, name, about, createdAt} = user
         res.status(200).send({
