@@ -109,7 +109,6 @@ exports.updateProfile = (req,res)=>{
 exports.contactEmail = async (req, res) =>{
    
     const {email,message} = req.body
-    return res.status(200).json({message: `Thanks for reaching out. I will get back to you at ${email}`})
 
     if(message.length <=200){
         return res.status(400).json({
@@ -120,15 +119,19 @@ exports.contactEmail = async (req, res) =>{
         const emailData = {
             to: `blogaramaa@gmail.com`,
             from: process.env.SENDMAIL_TO_BLOGRAMAA,
-            subject: `Customer contact: ${email}`,
-            html: `${message}`
+            subject: `User contact: ${email}`,
+            html: `<p>${message}</p>`
         }
         
-       const result =  await sgMail.send(emailData)
+        try{
+        const result =  await sgMail.send(emailData)
         if(result){
-            return res.status(200).json({message: `Thanks for reaching out. I will get back to you at ${email}`})
-    }
+            return res.status(200).json({message: `Thanks for reaching out. I will contact you back at ${email}.`})}
+        }
+        catch(error){
+            console.log(error)
         return res.status(400).json({error:'Could not send email. Please, try again later.'})
+        }
     }
 
     // }
