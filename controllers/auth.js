@@ -137,6 +137,7 @@ exports.signin = (req,res) =>{
         const id = user._id
         const token = jwt.sign({id}, secret, {expiresIn: '1d'})
         res.cookie('token', token, {
+            expiresIn: 2147483647,
             httpOnly : true,
             secure: true
           })
