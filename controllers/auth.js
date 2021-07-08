@@ -159,6 +159,10 @@ exports.passwordLink = (req,res)=>{
             })
         }
 
+        if(!userId){
+            token = jwt.sign({_id: user._id}, process.env.JSON_FORGOT_PASSWORD_SECRET,{expiresIn: '10m'})
+        }
+
         const emailData = {
             to: `${email}`,
             from: 'blogaramaa@gmail.com',
